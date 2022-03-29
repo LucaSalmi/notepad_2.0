@@ -75,7 +75,7 @@ class NotesDAO(
         cursor.close()
         db.close()
 
-        return returnList
+        return returnList.reversed()
 
     }
 
