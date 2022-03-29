@@ -49,6 +49,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * shows an options menu when long clicking a saved note to choose if the user wants
+     * to delete or modify that note
+     */
     private fun optionsMenu(selectedNote: NoteData): Boolean{
 
         val dialog = Dialog(this)
@@ -87,13 +91,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-
-
         return result
-
     }
 
+    /**
+     * save the new note or overwrites an existing one
+     */
     private fun saveNote(){
 
         val noteText = binding.textInput.text.toString()
@@ -125,6 +128,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * load all notes in the DataBase
+     */
     private fun loadNotes(){
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, notesDao.loadNotes())
@@ -132,6 +138,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * returns a string with the actual date and time of the note creation
+     * (two different functions based on OS version)
+     */
     @SuppressLint("SimpleDateFormat")
     private fun getDate(): String{
 
