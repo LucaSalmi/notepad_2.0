@@ -11,6 +11,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notepad_20.databinding.ActivityMainBinding
 import com.example.notepad_20.databinding.OptionsMenuBinding
 import java.text.SimpleDateFormat
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notesDao: NotesDAO
     private var isModifying = false
     private lateinit var noteToModify: NoteData
+    private lateinit var noteslist: List<NoteData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +39,6 @@ class MainActivity : AppCompatActivity() {
         binding.saveBtn.setOnClickListener {
 
             saveNote()
-
-        }
-
-        binding.noteListView.onItemLongClickListener = AdapterView.OnItemLongClickListener{
-            parent, _, position, _ ->
-
-            val selectedNote = parent.getItemAtPosition(position) as NoteData
-            optionsMenu(selectedNote)
 
         }
     }
@@ -133,7 +127,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun loadNotes(){
 
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, notesDao.loadNotes())
+        noteslist = notesDao.loadNotes()
+        binding.noteListView.layoutManager = LinearLayoutManager(this)
+        val arrayAdapter = MyAdapter(noteslist){ position -> onListItemClick(position) }
         binding.noteListView.adapter = arrayAdapter
 
     }
@@ -163,6 +159,13 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("answer",dateString)
         return dateString
+
+    }
+
+    private fun onListItemClick(position: Int){
+
+        val selectedNote = noteslist[position]
+        optionsMenu(selectedNote)
 
     }
 }
