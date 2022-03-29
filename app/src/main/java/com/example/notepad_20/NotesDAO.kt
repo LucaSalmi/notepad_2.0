@@ -44,7 +44,8 @@ class NotesDAO(
         val db = this.writableDatabase
         val query = "DELETE FROM $TABLE_NOTES WHERE $COL_ID = ${note.id}"
         val cursor = db.rawQuery(query, null)
-        return cursor.moveToFirst()
+
+        return cursor.moveToFirst() || cursor.count == 0
 
     }
 
@@ -76,6 +77,18 @@ class NotesDAO(
 
         return returnList
 
+    }
+
+    fun overwriteNote(note: NoteData): Boolean{
+
+        val db = this.writableDatabase
+        val cv = ContentValues()
+
+        cv.put(COL_DATE, note.date)
+        cv.put(COL_NOTE, note.note)
+
+        val result = db.update(TABLE_NOTES, cv, "$COL_ID = ${note.id}", null)
+        return result != -1
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
